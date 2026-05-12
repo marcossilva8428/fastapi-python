@@ -55,6 +55,15 @@ def test_create_user():
 
 
 def test_read_users(client):
+    client.post(
+        '/users/',
+        json={
+            'username': 'alice',
+            'email': 'alice@example.com',
+            'password': 'secret',
+        },
+    )
+
     response = client.get('/users/')
 
     assert response.status_code == HTTPStatus.OK
@@ -70,6 +79,15 @@ def test_read_users(client):
 
 
 def test_update_user(client):
+    client.post(
+        '/users/',
+        json={
+            'username': 'alice',
+            'email': 'alice@example.com',
+            'password': 'secret',
+        },
+    )
+
     response = client.put(
         '/users/1',
         json={

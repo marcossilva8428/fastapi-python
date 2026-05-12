@@ -1,16 +1,17 @@
 import pytest
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import sessionmaker
+from fastapi.testclient import TestClient
 
-from models import table_registry
+from app import app, database
 
 
 @pytest.fixture
-def session():
-    engine = create_engine('sqlite:///:memory:')
-    table_registry.metadata.create_all(engine)
+def client():
+    with TestClient(app) as test_client:
+        yield test_client
 
-    with Session(engine) as session:
-        yield session
 
-    table_registry.metadata.drop_all(engine)
+@pytest.fixture(autouse=True)
+def clear_database():
+    database.clear()
+    yield
+    database.clear()
